@@ -1,0 +1,94 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+<script src="//malsup.github.com/jquery.form.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+
+<link href='//fonts.googleapis.com/css?family=Ubuntu|Roboto+Condensed:700' rel='stylesheet' type='text/css'>
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    text-align: center;
+  }
+  #tagline, #joinus {
+    font-family: 'Ubuntu';
+    font-size: 2em;
+  }
+  #logo {
+    font: 15em/1.1em 'Roboto Condensed';
+    margin-bottom: 0.5em;
+  }
+  #tagline {
+
+  }
+  #joinus {
+    display: inline-block;
+    margin-bottom: 0.5em;
+  }
+  #container {
+    display: table;
+    height: 100%;
+    width: 100%;
+    position: relative;
+  }
+  #content {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  #email input {
+    padding: 0.5em 1em;
+    width: 40em;
+    text-align: center;
+  }
+</style>
+
+<script>
+  $(function() {
+    var whatArr = ['news', 'internships', 'events', 'hackathons', 'fun',
+                   'opportunities', 'impact'];
+    function changeWhat() {
+      $('#what').slideUp(300, 'easeInOutCubic', function() {
+        var val = whatArr.shift();
+        $(this).text(val).slideDown(300, 'easeInOutCubic', function() {
+          setTimeout(function() {
+            changeWhat();
+          }, 1500);
+        });
+        whatArr.push(val);
+      });
+    }
+    changeWhat();
+
+    var emailHTML = $('#email').html();
+    $.ajax('join.php').done(function(data) {
+      $('#email').html(data);
+      $('#email form').submit(function() {
+        if ($(this).valid()) {
+          $(this).ajaxSubmit({target: '#email'});
+          $('#email').html('adding user...');
+        }
+        return false;
+      });
+      $('#email input').bind('enterKey', function(e) {
+        $('#email form').submit();
+      }).keyup(function(e) {
+        if (e.keyCode == 13) {
+          $(this).trigger("enterKey");
+        }
+      });
+    });
+  });
+</script>
+
+<div id="container">
+  <div id="content">
+    <div id="tagline">The Undergraduate Computer Science Society at Yale</div>
+    <div id="logo">Yale BootUp</div>
+    <table id="joinus"><tr>
+      <td>Join us for&nbsp;</td>
+      <td><div id="what"></div></td>
+    </tr></table>
+    <div id="email"></div>
+  </div>
+</div>
