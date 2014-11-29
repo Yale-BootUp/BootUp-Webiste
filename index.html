@@ -11,6 +11,11 @@
     margin: 0;
     text-align: center;
   }
+  body {
+    background: url('back.png') no-repeat center center;
+    background-size: cover;
+    color: #eee;
+  }
   #tagline, #joinus {
     font-family: 'Ubuntu';
     font-size: 2em;
@@ -19,12 +24,12 @@
     font: 15em/1.1em 'Roboto Condensed';
     margin-bottom: 0.5em;
   }
-  #tagline {
-
-  }
   #joinus {
     display: inline-block;
     margin-bottom: 0.5em;
+  }
+  #what {
+    color: #72f35c;
   }
   #container {
     display: table;
@@ -40,13 +45,15 @@
     padding: 0.5em 1em;
     width: 40em;
     text-align: center;
+    font-family: 'Ubuntu';
+    letter-spacing: 1px;
   }
 </style>
 
 <script>
   $(function() {
-    var whatArr = ['news', 'internships', 'events', 'hackathons', 'fun',
-                   'opportunities', 'impact'];
+    var whatArr = ['news', 'internships', 'events', 'jobs', 'hackathons', 
+                   'fun', 'opportunities', 'change', 'tech talks'];
     function changeWhat() {
       $('#what').slideUp(300, 'easeInOutCubic', function() {
         var val = whatArr.shift();
