@@ -1,1 +1,1 @@
-# maddie-vp
+# Yale BootUp Splash Page
