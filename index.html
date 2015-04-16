@@ -1,101 +1,65 @@
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-<script src="//malsup.github.com/jquery.form.js"></script>
-<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-
-<link href='//fonts.googleapis.com/css?family=Ubuntu|Roboto+Condensed:700' rel='stylesheet' type='text/css'>
-<style>
-  html, body {
-    height: 100%;
-    margin: 0;
-    text-align: center;
-  }
-  body {
-    background: url('back.png') no-repeat center center;
-    background-size: cover;
-    color: #eee;
-  }
-  #tagline, #joinus {
-    font-family: 'Ubuntu';
-    font-size: 2em;
-  }
-  #logo {
-    font: 15em/1.1em 'Roboto Condensed';
-    margin-bottom: 0.5em;
-  }
-  #joinus {
-    display: inline-block;
-    margin-bottom: 0.5em;
-  }
-  #what {
-    color: #72f35c;
-  }
-  #container {
-    display: table;
-    height: 100%;
-    width: 100%;
-    position: relative;
-  }
-  #content {
-    display: table-cell;
-    vertical-align: middle;
-  }
-  #email input {
-    padding: 0.5em 1em;
-    width: 40em;
-    text-align: center;
-    font-family: 'Ubuntu';
-    letter-spacing: 1px;
-  }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Yale BootUp</title>
+  <link rel="stylesheet" href="css/home.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script src="js/index.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+  <script src="//malsup.github.com/jquery.form.js"></script>
+  <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+  <link href='//fonts.googleapis.com/css?family=Ubuntu|Roboto+Condensed:700' rel='stylesheet' type='text/css'>
+</head>
+<body>
+  <div id="container">
+    <div id="content">
+      <div id="tagline">The Undergraduate Computer Science Society at Yale</div>
+      <img id="large-logo" src="img/y-bootup_white_800px.png">
+      <table id="joinus"><tr>
+        <td>Join us for&nbsp;</td>
+        <td><div id="what"></div></td>
+      </tr></table>
+      <form class="box" target="_self" onsubmit="" action="javascript: postForm()">
+        <input id="email" type="email" placeholder="email adress"></input>
+        <input type="submit" value="subscribe to panlist"></input>
+      </form>
+    </div>
+  </div>
 
 <script>
-  $(function() {
-    var whatArr = ['news', 'internships', 'events', 'jobs', 'hackathons', 
-                   'fun', 'opportunities', 'change', 'tech talks'];
-    function changeWhat() {
-      $('#what').slideUp(300, 'easeInOutCubic', function() {
-        var val = whatArr.shift();
-        $(this).text(val).slideDown(300, 'easeInOutCubic', function() {
-          setTimeout(function() {
-            changeWhat();
-          }, 1500);
-        });
-        whatArr.push(val);
+  function validateEmail(email) { 
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+  function postForm(){
+    var email = $('#email').val();
+    if (validateEmail(email)) {
+      $.ajax({
+        url: "https://docs.google.com/a/yale.edu/forms/d/1Rc-5dJ75AwabrllKhV-7rhNbolyj7DTwUIFsB73PbnA/formResponse",
+        data: { "entry.204820562" : email },
+        type: "POST",
+        dataType: "xml",
+        statusCode: {
+          0: function (){
+            $('#email').val("").attr("placeholder", "Thanks! We'll be in touch.");
+            $('#email').blur();
+          },
+          200: function (){
+            $('#email').val("").attr("placeholder", "Thanks! We'll be in touch.");
+            $('#email').blur();
+          }
+        }
       });
     }
-    changeWhat();
-
-    var emailHTML = $('#email').html();
-    $.ajax('join.php').done(function(data) {
-      $('#email').html(data);
-      $('#email form').submit(function() {
-        if ($(this).valid()) {
-          $(this).ajaxSubmit({target: '#email'});
-          $('#email').html('adding user...');
-        }
-        return false;
-      });
-      $('#email input').bind('enterKey', function(e) {
-        $('#email form').submit();
-      }).keyup(function(e) {
-        if (e.keyCode == 13) {
-          $(this).trigger("enterKey");
-        }
-      });
-    });
-  });
+    else {
+      $('#email').val("").attr("placeholder", "That's not a valid email.");
+      $('#email').blur();
+    }
+  }
 </script>
 
-<div id="container">
-  <div id="content">
-    <div id="tagline">The Undergraduate Computer Science Society at Yale</div>
-    <div id="logo">Yale BootUp</div>
-    <table id="joinus"><tr>
-      <td>Join us for&nbsp;</td>
-      <td><div id="what"></div></td>
-    </tr></table>
-    <div id="email"></div>
-  </div>
-</div>
+</body>
+</html>
